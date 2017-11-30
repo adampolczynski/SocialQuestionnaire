@@ -54,28 +54,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 	<script type="text/javascript">
-		var questions = JSON.parse('{{posts_json|safe}}');
+		var questions = {{posts_json|safe}};
 		var actualAnswer = 0;
 	//
 	var answers = [];
 	//
 	var social = [0,0,0,0,0,0,0,0];
-	var altruizm, oportunizm = 0;
-	var tolerancja = 0;
-	var konformizm = 0;
-	var otwartosc = 0;
-	var wrazliwosc = 0;
-	var uczciwosc = 0;
-	var ekstrawersja = 0;
-	//
-	var socjalizm = 0;
-	var kapitalizm = 0;
-	var nacjonalizm = 0;
-	var kosmopolityzm = 0;
-	var autorytaryzm = 0;
-	var demokratyzm = 0;
-	var konserwatyzm = 0;
-	var liberalizm = 0;
+
 	$(document).ready(function() {
 		var modals = $(".modal");
 		modals.eq(actualAnswer).modal('show');
