@@ -156,7 +156,12 @@
 		});
 	}
 	function parseThisShit(shit) {
-		return ((shit.replace(/u(?=[^:]+')/g, "")).replace(/[\])}[{(]/g, '')).replace(/'/g, "").split(',');
+		if (typeof shit === "object") {
+			return shit
+		} else {
+			return ((shit.replace(/u(?=[^:]+')/g, "")).replace(/[\])}[{(]/g, '')).replace(/'/g, "").split(',');
+		}
+		
 	}
 </script>
 </body>
