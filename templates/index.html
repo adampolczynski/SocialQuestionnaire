@@ -81,19 +81,19 @@
 		for (var i = 0; i < answers.length; i++) {
 			switch (answers[i]) {
 				case '1':
-				actualWage = JSON.parse(questions[i].fields.wages_1.replace(/u'(?=[^:]+')/g, ""));
+				actualWage = questions[i].fields.wages_1;
 				break;
 				case '2':
-				actualWage = JSON.parse(questions[i].fields.wages_2.replace(/u'(?=[^:]+')/g, ""));
+				actualWage = questions[i].fields.wages_2;
 				break;
 				case '3':
-				actualWage = JSON.parse(questions[i].fields.wages_3.replace(/u'(?=[^:]+')/g, ""));
+				actualWage = questions[i].fields.wages_3;
 				break;
 				case '4':
-				actualWage = JSON.parse(questions[i].fields.wages_4.replace(/u'(?=[^:]+')/g, ""));
+				actualWage = questions[i].fields.wages_4;
 				break;
 				case '5':
-				actualWage = JSON.parse(questions[i].fields.wages_5.replace(/u'(?=[^:]+')/g, ""));
+				actualWage = questions[i].fields.wages_5;
 				break;
 				default:
 				actualWage = "cos nie tego";
@@ -103,7 +103,7 @@
 				if (actualWage[x]=="nd"||actualWage[x]=="?"||actualWage[x]=="nd?"||actualWage[x]=="70 ?") {
 					social[x] += 50; // na ten moment 50 tam gdzie nie ma wartosci... 
 				} else {
-					console.log(actualWage[x]);
+					console.log((actualWage.replace(/u'(?=[^:]+')/g, "'")).replace("'",'"'));
 					social[x] += parseInt(actualWage[x]);
 				}
 			}
