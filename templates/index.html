@@ -81,19 +81,19 @@
 		for (var i = 0; i < answers.length; i++) {
 			switch (answers[i]) {
 				case '1':
-				actualWage = JSON.parse(questions[i].fields.wages_1.replace(/u'(?=[^:]+')/g, "")).replace(/'(?=[^:]+')/g,"");
+				actualWage = questions[i].fields.wages_1;
 				break;
 				case '2':
-				actualWage = JSON.parse(questions[i].fields.wages_2.replace(/u'(?=[^:]+')/g, "")).replace(/'(?=[^:]+')/g,"");;
+				actualWage = questions[i].fields.wages_2;
 				break;
 				case '3':
-				actualWage = JSON.parse(questions[i].fields.wages_3.replace(/u'(?=[^:]+')/g, "")).replace(/'(?=[^:]+')/g,"");;
+				actualWage = questions[i].fields.wages_3;
 				break;
 				case '4':
-				actualWage = JSON.parse(questions[i].fields.wages_4.replace(/u'(?=[^:]+')/g, "")).replace(/'(?=[^:]+')/g,"");;
+				actualWage = questions[i].fields.wages_4;
 				break;
 				case '5':
-				actualWage = JSON.parse(questions[i].fields.wages_5.replace(/u'(?=[^:]+')/g, "")).replace(/'(?=[^:]+')/g,"");;
+				actualWage = questions[i].fields.wages_5;
 				break;
 				default:
 				actualWage = "cos nie tego";
