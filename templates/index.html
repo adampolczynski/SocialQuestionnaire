@@ -1,0 +1,176 @@
+<html>
+<head>
+	<title>Ankieta 1.0</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
+
+</head>
+
+<body>
+	{% for q in posts %}
+
+	<div class="modal fade" data-backdrop="static" id="myModal{{q.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">{{q.question}}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<div class="col-10" style="margin: 0 auto;">
+						<button value="5" class="b1 btn btn-success form-control">Bardzo się zgadzam.</button>
+						<button value="4" class="b2 btn btn-primary form-control">Raczej się zgadzam.</button>
+						<button value="3" class="b3 btn btn-info form-control">Nie wypowiadam się.</button>
+						<button value="2" class="b4 btn btn-warning form-control">Raczej nie popieram.</button>
+						<button value="1" class="b5 btn btn-danger form-control">Bardzo nie popieram.</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% endfor %}
+
+	<div class="modal fade" data-backdrop="static" id="finalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Twoje statystyki</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div id="stats"></div>
+					<canvas id="chart" width="700" height="400"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		var questions = JSON.parse('{{posts_json|safe}}');
+		var actualAnswer = 0;
+	//
+	var answers = [];
+	//
+	var social = [0,0,0,0,0,0,0,0];
+	var altruizm, oportunizm = 0;
+	var tolerancja = 0;
+	var konformizm = 0;
+	var otwartosc = 0;
+	var wrazliwosc = 0;
+	var uczciwosc = 0;
+	var ekstrawersja = 0;
+	//
+	var socjalizm = 0;
+	var kapitalizm = 0;
+	var nacjonalizm = 0;
+	var kosmopolityzm = 0;
+	var autorytaryzm = 0;
+	var demokratyzm = 0;
+	var konserwatyzm = 0;
+	var liberalizm = 0;
+	$(document).ready(function() {
+		var modals = $(".modal");
+		modals.eq(actualAnswer).modal('show');
+		$(".btn").click(function(e) {
+			modals.eq(actualAnswer).modal('hide');
+			actualAnswer++;
+			answers.push($(e.target).val());
+			if (actualAnswer == 10) {
+				countStats();
+			} else {
+				modals.eq(actualAnswer).modal('show');
+			}
+		});
+	});
+	function countStats() {
+		//alert(questions[2].fields.question);
+		var actualWage;
+		for (var i = 0; i < answers.length; i++) {
+			switch (answers[i]) {
+				case '1':
+				actualWage = questions[i].fields.wages_1;
+				break;
+				case '2':
+				actualWage = questions[i].fields.wages_2;
+				break;
+				case '3':
+				actualWage = questions[i].fields.wages_3;
+				break;
+				case '4':
+				actualWage = questions[i].fields.wages_4;
+				break;
+				case '5':
+				actualWage = questions[i].fields.wages_5;
+				break;
+				default:
+				actualWage = "cos nie tego";
+				break;
+			}
+			for (var x = 0; x < social.length; x++) {
+				if (actualWage[x]=="nd"||actualWage[x]=="?"||actualWage[x]=="nd?"||actualWage[x]=="70 ?") {
+					social[x] += 50; // na ten moment 50 tam gdzie nie ma wartosci... 
+				} else {
+					console.log(actualWage[x])
+					social[x] += parseInt(actualWage[x]);
+				}
+			}
+		}
+		for (var x = 0; x < social.length; x++) {
+			social[x] = parseInt(social[x]/10);
+		}
+		console.log(social+" <-social table");
+		$("#finalModal").modal('show');
+		var ctx = document.getElementById("chart").getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'radar',
+			data: {
+				labels: ["Altruizm", "Oportunizm", "Tolerancja", "Konformizm", "Otwartość", "Wrażliwość", "Uczciwość", "Ekstrawerstyzm"],
+				datasets: [{
+					label: 'sugestia osobowosci',
+					data: social,
+					backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(255, 99, 132, 0.2)'
+					],
+					borderColor: [
+					'rgba(255,99,132,1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)'
+					],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+		});
+	}
+	
+</script>
+</body>
+</html>
