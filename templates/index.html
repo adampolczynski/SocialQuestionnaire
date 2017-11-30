@@ -103,8 +103,9 @@
 				if (actualWage[x]=="nd"||actualWage[x]=="?"||actualWage[x]=="nd?") {
 					social[x] += 50; // na ten moment 50 tam gdzie nie ma wartosci... 
 				} else {
-					console.log(actualWage[x]);
-					console.log(typeof(actualWage[x]))
+					console.log(actualWage[x]=="nd");
+					console.log(actualWage[x]=='nd');
+					console.log(parseInt(actualWage[x])=="nd")
 					social[x] += parseInt(actualWage[x]);
 				}
 			}
