@@ -13,10 +13,11 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">{{q.question}}</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<h5 class="modal-title text-center" id="exampleModalLabel">{{q.question}}</h5>
+					<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
-					</button>
+					</button> -->
+						<span class="which text-success" id="which"></span>
 				</div>
 				<div class="modal-body">
 
@@ -53,25 +54,31 @@
 	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
 	<script type="text/javascript">
+
+		var modals = $(".modal");
+		var questionsAmount = modals.length-1;
 		var questions = {{posts_json|safe}};
 		var actualAnswer = 0;
-	//
-	var answers = [];
-	//
-	var social = [0,0,0,0,0,0,0,0];
+		var answers = [];
+		var social = [0,0,0,0,0,0,0,0];
 
 	$(document).ready(function() {
-		var modals = $(".modal");
+		
 		modals.eq(actualAnswer).modal('show');
+		$("#which").eq(actualAnswer).text(actualAnswer+1+"/"+questionsAmount);
+
 		$(".btn").click(function(e) {
 			modals.eq(actualAnswer).modal('hide');
 			actualAnswer++;
 			answers.push($(e.target).val());
-			if (actualAnswer == 10) {
+			if (actualAnswer == questionsAmount) {
 				countStats();
 			} else {
 				modals.eq(actualAnswer).modal('show');
+				$(".which").eq(actualAnswer).text(actualAnswer+1+"/"+questionsAmount);
+
 			}
 		});
 	});
@@ -103,16 +110,13 @@
 				if (actualWage[x]=="nd"||actualWage[x]=="?"||actualWage[x]=="nd?"||actualWage[x]=="nd "||actualWage[x]==" nd"||actualWage[x]=="nd? "||actualWage[x]==" nd?"||actualWage[x]==" ?"||actualWage[x]=="? ") {
 					social[x] += 50; // na ten moment 50 tam gdzie nie ma wartosci... 
 				} else {
-					console.log(actualWage[x].toString()=="nd");
-					console.log(parseInt(actualWage[x])=="nd");
 					social[x] += parseInt(actualWage[x]);
 				}
 			}
 		}
 		for (var x = 0; x < social.length; x++) {
-			social[x] = parseInt(social[x]/10);
+			social[x] = parseInt(social[x]/questionsAmount);
 		}
-		console.log(social+" <-social table");
 		$("#finalModal").modal('show');
 		var ctx = document.getElementById("chart").getContext('2d');
 		var myChart = new Chart(ctx, {

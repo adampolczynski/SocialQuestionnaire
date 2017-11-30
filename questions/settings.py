@@ -12,11 +12,11 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django_mongodb_engine',
-        'NAME': 'xxx',
-        'USER':'anapp',
-        'PASSWORD':'kurwa666!',
-        'HOST':'ds135574.mlab.com',
-        'PORT':'35574',
+        'NAME': 'foranum',
+        'USER':'read',
+        'PASSWORD':'ahtenread1',
+        'HOST':'ds227035.mlab.com', # ds135574.mlab.com:35574
+        'PORT':'27035',
     }
 }
 
