@@ -103,7 +103,7 @@
 				if (actualWage[x]=="nd"||actualWage[x]=="?"||actualWage[x]=="nd?"||actualWage[x]=="70 ?") {
 					social[x] += 50; // na ten moment 50 tam gdzie nie ma wartosci... 
 				} else {
-					console.log((actualWage.replace(/u'(?=[^:]+')/g, "")).replace(/'(?=[^:]+')/g,""));
+					//console.log((actualWage.replace(/u'(?=[^:]+')/g, "")).replace(/'(?=[^:]+')/g,""));
 					social[x] += parseInt(actualWage[x]);
 				}
 			}
