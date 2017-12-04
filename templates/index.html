@@ -35,21 +35,22 @@
 
 	{% endfor %}
 
-	<div class="modal fade" data-backdrop="static" id="finalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Twoje statystyki</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div id="stats"></div>
-					<canvas id="chart" width="700" height="400"></canvas>
-				</div>
-			</div>
-		</div>
+	<div class="row" style="min-width: 600px;margin:0 auto;margin-top: 50px;margin-bottom:50px;">
+			<canvas class="col-6" id="sChart" style="min-width: 300px; min-height:300px;" width="400" height="400"></canvas>
+			<canvas class="col-6" id="pChart" style="min-width: 300px; min-height:300px;" width="400" height="400"></canvas>
+	</div>
+	<div id="descr" hidden='true'>
+		<div class="fixed-top text-center" style="background: grey; height: 50px;">
+		<p class="text-info" style="font-size: 24px; margin-top: 4px;">Uzyskane wyniki:</p>
+	</div>
+	<div class="fixed-bottom text-center" style="background: grey; height: 50px;">
+		<p class="text-warning" style="font-size: 14px; margin-top: 4px;">
+		Nie zgadzają się? Napisz! <br>
+		<a class="text-info" href="mailto:adam_polczynski@yahoo.com">
+			adam_polczynski@yahoo.com
+		</a>
+		</p>
+	</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
@@ -58,11 +59,10 @@
 	<script type="text/javascript">
 
 		var modals = $(".modal");
-		var questionsAmount = modals.length-1;
+		var questionsAmount = modals.length;
 		var questions = {{posts_json|safe}};
 		var actualAnswer = 0;
 		var answers = [];
-		var social = [0,0,0,0,0,0,0,0];
 
 	$(document).ready(function() {
 		
@@ -78,12 +78,14 @@
 			} else {
 				modals.eq(actualAnswer).modal('show');
 				$(".which").eq(actualAnswer).text(actualAnswer+1+"/"+questionsAmount);
-
 			}
 		});
 	});
 	function countStats() {
-		//alert(questions[2].fields.question);
+		var social = [0,0,0,0,0,0,0,0];
+		var political = [0,0,0,0,0,0,0,0];
+		var sAnswersCounter = [0,0,0,0,0,0,0,0];
+		var pAnswersCounter = [0,0,0,0,0,0,0,0];
 		var actualWage;
 		for (var i = 0; i < answers.length; i++) {
 			switch (answers[i]) {
@@ -107,44 +109,42 @@
 				break;
 			}
 			for (var x = 0; x < social.length; x++) {
-				if (actualWage[x]=="nd"||actualWage[x]=="?"||actualWage[x]=="nd?"||actualWage[x]=="nd "||actualWage[x]==" nd"||actualWage[x]=="nd? "||actualWage[x]==" nd?"||actualWage[x]==" ?"||actualWage[x]=="? ") {
-					social[x] += 50; // na ten moment 50 tam gdzie nie ma wartosci... 
+				if (!isItNumber(actualWage[x])) {
+					social[x] += 0; // and no counter
 				} else {
 					social[x] += parseInt(actualWage[x]);
+					sAnswersCounter[x]++;
+				}
+			}
+			for (var x = 0; x < political.length; x++) {
+				if (!isItNumber(actualWage[x+8])) {
+					political[x] += 0;
+				} else {
+					political[x] += parseInt(actualWage[x+8]);
+					pAnswersCounter[x]++;
 				}
 			}
 		}
 		for (var x = 0; x < social.length; x++) {
-			social[x] = parseInt(social[x]/questionsAmount);
+			social[x] = parseInt(social[x]/sAnswersCounter[x]);
+			political[x] = parseInt(political[x]/pAnswersCounter[x])
 		}
-		$("#finalModal").modal('show');
-		var ctx = document.getElementById("chart").getContext('2d');
-		var myChart = new Chart(ctx, {
+		// $("#finalModal").modal('show');
+		$("#descr").removeAttr('hidden');
+		var ctx = document.getElementById("sChart").getContext('2d');
+		var ctx2 = document.getElementById("pChart").getContext('2d');
+		var social = new Chart(ctx, {
 			type: 'radar',
 			data: {
 				labels: ["Altruizm", "Oportunizm", "Tolerancja", "Konformizm", "Otwartość", "Wrażliwość", "Uczciwość", "Ekstrawerstyzm"],
 				datasets: [{
-					label: 'sugestia osobowosci',
+					label: 'cechy personalne',
 					data: social,
 					backgroundColor: [
-					'rgba(255, 99, 132, 0.2)',
-					'rgba(54, 162, 235, 0.2)',
-					'rgba(255, 206, 86, 0.2)',
-					'rgba(75, 192, 192, 0.2)',
-					'rgba(153, 102, 255, 0.2)',
-					'rgba(255, 159, 64, 0.2)',
-					'rgba(75, 192, 192, 0.2)',
 					'rgba(255, 99, 132, 0.2)'
 					],
 					borderColor: [
-					'rgba(255,99,132,1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)'
+					'rgba(255,99,132,1)'
 					],
 					borderWidth: 1
 				}]
@@ -159,6 +159,39 @@
 				}
 			}
 		});
+		var political = new Chart(ctx2, {
+			type: 'radar',
+			data: {
+				labels: ["Socjalizm", "Kapitalizm", "Nacjonalizm", "Kosmopolityzm", "Autorytaryzm", "Demokratyzm", "Konserwatyzm", "Liberalizm"],
+				datasets: [{
+					label: 'poglady polityczne',
+					data: political,
+					backgroundColor: [
+					'rgba(153, 102, 255, 0.2)'
+					],
+					borderColor: [
+					'rgba(153, 102, 255, 1)'
+					],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+		});
+	}
+	function isItNumber(i) {
+		if (i=="nd"||i=="?"||i=="nd?"||i=="nd "||i==" nd"||i=="nd? "||i==" nd?"||i==" ?"||i=="? ") {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	function parseThisShit(shit) {
 		if (typeof shit === "object") {
