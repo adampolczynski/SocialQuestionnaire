@@ -127,8 +127,9 @@
 		}
 		for (var x = 0; x < social.length; x++) {
 			social[x] = parseInt(social[x]/sAnswersCounter[x]);
-			political[x] = parseInt(political[x]/pAnswersCounter[x])
+			political[x] = parseInt(political[x]/pAnswersCounter[x]);
 		}
+		console.log("social table-> "+social+"//"+"political table-> "+political);
 		// $("#finalModal").modal('show');
 		$("#descr").removeAttr('hidden');
 		var ctx = document.getElementById("sChart").getContext('2d');
