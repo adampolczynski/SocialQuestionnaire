@@ -149,8 +149,6 @@
 		var ctx3 = document.getElementById("paChart").getContext('2d');
 		var social = new Chart(ctx, {
 			type: 'radar',
-			overrideScale: true,
-
 			data: {
 				labels: ["Altruizm", "Oportunizm", "Tolerancja", "Konformizm", "Otwartość", "Wrażliwość", "Uczciwość", "Przedsiębiorczość"],
 				datasets: [{
@@ -165,15 +163,9 @@
 					borderWidth: 1
 				}]
 			},
-			options: {
-				scales: {
-					yAxes: [{
-						ticks: {
-							beginAtZero:true
-						}
-					}]
-				}
-			}
+			scaleOverride: true,
+			scaleSteps: 10,
+			scaleStepWidth: 10
 		});
 		var political = new Chart(ctx2, {
 			type: 'radar',
@@ -191,15 +183,9 @@
 					borderWidth: 1
 				}]
 			},
-			options: {
-				scales: {
-					yAxes: [{
-						ticks: {
-							beginAtZero:true
-						}
-					}]
-				}
-			}
+			scaleOverride: true,
+			scaleSteps: 10,
+			scaleStepWidth: 10
 		});
 		var parties = new Chart(ctx3, {
 			type: 'bar',
