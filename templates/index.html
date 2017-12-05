@@ -47,7 +47,7 @@
 		<p class="text-warning" style="font-size: 14px; margin-top: 4px;">
 		Nie zgadzają się? Napisz! <br>
 		<a class="text-info" href="mailto:adam_polczynski@yahoo.com">
-			adam_polczynski@yahoo.com
+			foranum@protonmail.com
 		</a>
 		</p>
 	</div>
@@ -136,6 +136,8 @@
 		var ctx2 = document.getElementById("pChart").getContext('2d');
 		var social = new Chart(ctx, {
 			type: 'radar',
+			overrideScale: true,
+
 			data: {
 				labels: ["Altruizm", "Oportunizm", "Tolerancja", "Konformizm", "Otwartość", "Wrażliwość", "Uczciwość", "Ekstrawerstyzm"],
 				datasets: [{
