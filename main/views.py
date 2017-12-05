@@ -6,7 +6,7 @@ from django.core import serializers
 from .models import Questions
 
 def index(request):
-	obj = Questions.objects.all()[:10]
+	obj = Questions.objects.all()[:20]
 	serialized = serializers.serialize('json', obj)
 	return render_to_response('index.html', {
 		'posts': obj,

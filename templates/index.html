@@ -17,14 +17,14 @@
 					<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button> -->
-						<span class="which text-success" id="which"></span>
+					<span class="which text-success" id="which"></span>
 				</div>
 				<div class="modal-body">
 
 					<div class="col-10" style="margin: 0 auto;">
 						<button value="5" class="b1 btn btn-success form-control">Bardzo się zgadzam.</button>
 						<button value="4" class="b2 btn btn-primary form-control">Raczej się zgadzam.</button>
-						<button value="3" class="b3 btn btn-info form-control">Nie wypowiadam się.</button>
+						<button value="3" class="b3 btn btn-info form-control">Jestem obojętny.</button>
 						<button value="2" class="b4 btn btn-warning form-control">Raczej nie popieram.</button>
 						<button value="1" class="b5 btn btn-danger form-control">Bardzo nie popieram.</button>
 					</div>
@@ -35,22 +35,23 @@
 
 	{% endfor %}
 
-	<div class="row" style="min-width: 600px;margin:0 auto;margin-top: 50px;margin-bottom:50px;">
-			<canvas class="col-6" id="sChart" style="min-width: 300px; min-height:300px;" width="400" height="400"></canvas>
-			<canvas class="col-6" id="pChart" style="min-width: 300px; min-height:300px;" width="400" height="400"></canvas>
+	<div class="row" style="min-width: 720px;margin:0 auto;margin-top: 50px;margin-bottom:50px;">
+		<canvas class="col-12" id="paChart" style="min-width: 720px; min-height:260px;margin-bottom: 20px;" width="800" height="260"></canvas>
+		<canvas class="col-6" id="sChart" style="min-width: 360px; min-height:300px;" width="400" height="400"></canvas>
+		<canvas class="col-6" id="pChart" style="min-width: 360px; min-height:300px;" width="400" height="400"></canvas>
 	</div>
 	<div id="descr" hidden='true'>
 		<div class="fixed-top text-center" style="background: grey; height: 50px;">
-		<p class="text-info" style="font-size: 24px; margin-top: 4px;">Uzyskane wyniki:</p>
-	</div>
-	<div class="fixed-bottom text-center" style="background: grey; height: 50px;">
-		<p class="text-warning" style="font-size: 14px; margin-top: 4px;">
-		Nie zgadzają się? Napisz! <br>
-		<a class="text-info" href="mailto:adam_polczynski@yahoo.com">
-			foranum@protonmail.com
-		</a>
-		</p>
-	</div>
+			<p class="text-info" style="font-size: 24px; margin-top: 4px;">Uzyskane wyniki:</p>
+		</div>
+		<div class="fixed-bottom text-center" style="background: grey; height: 50px;">
+			<p class="text-warning" style="font-size: 14px; margin-top: 4px;">
+				Nie zgadzają się? Napisz! <br>
+				<a class="text-info" href="mailto:adam_polczynski@yahoo.com">
+					foranum@protonmail.com
+				</a>
+			</p>
+		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
@@ -64,52 +65,54 @@
 		var actualAnswer = 0;
 		var answers = [];
 
-	$(document).ready(function() {
-		
-		modals.eq(actualAnswer).modal('show');
-		$("#which").eq(actualAnswer).text(actualAnswer+1+"/"+questionsAmount);
+		$(document).ready(function() {
 
-		$(".btn").click(function(e) {
-			modals.eq(actualAnswer).modal('hide');
-			actualAnswer++;
-			answers.push($(e.target).val());
-			if (actualAnswer == questionsAmount) {
-				countStats();
-			} else {
-				modals.eq(actualAnswer).modal('show');
-				$(".which").eq(actualAnswer).text(actualAnswer+1+"/"+questionsAmount);
-			}
+			modals.eq(actualAnswer).modal('show');
+			$("#which").eq(actualAnswer).text(actualAnswer+1+"/"+questionsAmount);
+
+			$(".btn").click(function(e) {
+				modals.eq(actualAnswer).modal('hide');
+				actualAnswer++;
+				answers.push($(e.target).val());
+				if (actualAnswer == questionsAmount) {
+					countStats();
+				} else {
+					modals.eq(actualAnswer).modal('show');
+					$(".which").eq(actualAnswer).text(actualAnswer+1+"/"+questionsAmount);
+				}
+			});
 		});
-	});
-	function countStats() {
-		var social = [0,0,0,0,0,0,0,0];
-		var political = [0,0,0,0,0,0,0,0];
-		var sAnswersCounter = [0,0,0,0,0,0,0,0];
-		var pAnswersCounter = [0,0,0,0,0,0,0,0];
-		var actualWage;
-		for (var i = 0; i < answers.length; i++) {
-			switch (answers[i]) {
-				case '1':
-				actualWage = parseThisShit(questions[i].fields.wages_1);
-				break;
-				case '2':
-				actualWage = parseThisShit(questions[i].fields.wages_2);
-				break;
-				case '3':
-				actualWage = parseThisShit(questions[i].fields.wages_3);
-				break;
-				case '4':
-				actualWage = parseThisShit(questions[i].fields.wages_4);
-				break;
-				case '5':
-				actualWage = parseThisShit(questions[i].fields.wages_5);
-				break;
-				default:
-				actualWage = "cos nie tego";
-				break;
-			}
-			for (var x = 0; x < social.length; x++) {
-				if (!isItNumber(actualWage[x])) {
+		function countStats() {
+			var social = [0,0,0,0,0,0,0,0];
+			var political = [0,0,0,0,0,0,0,0];
+			var parties = [0,0,0,0,0,0,0,0];
+			var sAnswersCounter = [0,0,0,0,0,0,0,0];
+			var pAnswersCounter = [0,0,0,0,0,0,0,0];
+			var paAnswersCounter = [0,0,0,0,0,0,0,0];
+			var actualWage;
+			for (var i = 0; i < answers.length; i++) {
+				switch (answers[i]) {
+					case '1':
+					actualWage = parseThisShit(questions[i].fields.wages_1);
+					break;
+					case '2':
+					actualWage = parseThisShit(questions[i].fields.wages_2);
+					break;
+					case '3':
+					actualWage = parseThisShit(questions[i].fields.wages_3);
+					break;
+					case '4':
+					actualWage = parseThisShit(questions[i].fields.wages_4);
+					break;
+					case '5':
+					actualWage = parseThisShit(questions[i].fields.wages_5);
+					break;
+					default:
+					actualWage = "cos nie tego";
+					break;
+				}
+				for (var x = 0; x < social.length; x++) {
+					if (!isItNumber(actualWage[x])) {
 					social[x] += 0; // and no counter
 				} else {
 					social[x] += parseInt(actualWage[x]);
@@ -124,22 +127,32 @@
 					pAnswersCounter[x]++;
 				}
 			}
+			for (var x = 0; x < parties.length; x++) {
+				if (!isItNumber(actualWage[x+16])) {
+					parties[x] += 0;
+				} else {
+					parties[x] += parseInt(actualWage[x+16]);
+					paAnswersCounter[x]++;
+				}
+			}
 		}
 		for (var x = 0; x < social.length; x++) {
 			social[x] = parseInt(social[x]/sAnswersCounter[x]);
 			political[x] = parseInt(political[x]/pAnswersCounter[x]);
+			parties[x] = parseInt(parties[x]/paAnswersCounter[x]);
 		}
 		console.log("social table-> "+social+"//"+"political table-> "+political);
 		// $("#finalModal").modal('show');
 		$("#descr").removeAttr('hidden');
 		var ctx = document.getElementById("sChart").getContext('2d');
 		var ctx2 = document.getElementById("pChart").getContext('2d');
+		var ctx3 = document.getElementById("paChart").getContext('2d');
 		var social = new Chart(ctx, {
 			type: 'radar',
 			overrideScale: true,
 
 			data: {
-				labels: ["Altruizm", "Oportunizm", "Tolerancja", "Konformizm", "Otwartość", "Wrażliwość", "Uczciwość", "Ekstrawerstyzm"],
+				labels: ["Altruizm", "Oportunizm", "Tolerancja", "Konformizm", "Otwartość", "Wrażliwość", "Uczciwość", "Przedsiębiorczość"],
 				datasets: [{
 					label: 'cechy personalne',
 					data: social,
@@ -178,6 +191,51 @@
 					borderWidth: 1
 				}]
 			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+		});
+		var parties = new Chart(ctx3, {
+			type: 'bar',
+			data: {
+				labels: ["PO", "PiS", "SLD", "PSL", "Nowoczesna", "Kukiz 15", "Razem", "Wolność"],
+				datasets: [{
+					label: 'przynalezność do partii',
+					data: parties,
+					backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)',
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(75, 192, 192, 0.2)'
+
+					],
+					borderColor: [
+					'rgba(255,99,132,1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)',
+					'rgba(255,99,132,1)',
+					'rgba(75, 192, 192, 1)'
+
+					],
+					borderWidth: 1
+				}]
+			},
+			scaleOverride: true,
+			scaleSteps: 10,
+			scaleStepWidth: 10,
 			options: {
 				scales: {
 					yAxes: [{
